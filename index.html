@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<h1> Мое приложение Insert Select Update Delete </h1>
+<hr>
+Имя: <br> <input type="text" id="namebox"> <br>
+Возраст:<br> <input type="text" id="agebox"> <br>
+Номер группы: <br> <input type="text" id="numberbox"> <br>
+Пол: <br> <input type="text" id="sexbox"> <br>
+<hr>
+<button id="insert"> Добавить в БД</button> <br>
+<button id="select"> Выбрать из БД</button> <br>
+<button id="update"> Обновить </button> <br>
+<button id="delete"> Удалить из БД</button> <br>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDx4TaDls7ZIQcwVBoiJmM3UqekIil1AEY",
+    authDomain: "shop-central-anapa.firebaseapp.com",
+    databaseURL: "https://shop-central-anapa.firebaseio.com",
+    projectId: "shop-central-anapa",
+    storageBucket: "shop-central-anapa.appspot.com",
+    messagingSenderId: "154692761218",
+    appId: "1:154692761218:web:0ecda4d69672fcc3e7e69b"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  var nameV, ageV, numberV, polV;
+
+  function Ready(){
+    nameV = document.getElementById('namebox').value;
+    document.getElementById('namebox').value = '';
+    ageV = document.getElementById('agebox').value;
+    document.getElementById('agebox').value = '';
+    numberV = document.getElementById('numberbox').value;
+    document.getElementById('numberbox').value = '';
+    polV = document.getElementById('sexbox').value;
+    document.getElementById('sexbox').value = '';
+  }
+
+//------------insert--------------------
+
+document.getElementById('insert').onclick = function(){
+    Ready();
+    firebase.database().ref('users/'+numberV).set({
+        Nomer: numberV,
+        Vozrast: ageV,
+        Imy: nameV,
+        Pol: polV
+    });
+
+    console.log('Данные добавлены в БД');
+}
+
+//------------update--------------------
+
+document.getElementById('update').onclick = function(){
+    Ready();
+    firebase.database().ref('users/'+numberV).update({       
+        Vozrast: ageV,
+        Imy: nameV,
+        Pol: polV
+    });
+    console.log('Данные обновлены в БД');
+}
+//------------delete--------------------
+document.getElementById('delete').onclick = function(){
+    Ready();
+    firebase.database().ref('users/'+numberV).remove();
+    console.log('Номер '+numberV+' удален из БД');
+}
+
+//------------insert--------------------
+
+document.getElementById('select').onclick = function(){
+    Ready();
+    firebase.database().ref('users/'+numberV).on('value', function(snapshot){
+        document.getElementById('namebox').value = snapshot.val().Imy;
+        document.getElementById('agebox').value = snapshot.val().Vozrast;
+        document.getElementById('sexbox').value = snapshot.val().Pol;
+    })
+    console.log('Достал данные')
+}
+</script>
+    
+</body>
+</html>
